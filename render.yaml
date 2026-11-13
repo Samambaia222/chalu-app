@@ -1,0 +1,21 @@
+# Render 一键部署配置
+# 使用方法：将 chalu_app 目录推送到 GitHub 仓库，然后在 Render 控制台
+# 点击 "New +" → "Blueprint" → 选择该仓库，Render 会自动读取此文件。
+#
+# 或者直接在 Render 新建 Web Service：
+#   Root Directory: chalu_app
+#   Build Command: pip install -r backend/requirements.txt
+#   Start Command: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+
+services:
+  - type: web
+    name: chalu-app
+    runtime: python
+    plan: free
+    rootDir: .
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /docs
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
