@@ -1019,7 +1019,11 @@ import os
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-_DIST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "dist")
+_BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# 兼容两种目录结构：本地开发时 frontend/dist/，部署时可能直接在根目录 dist/
+_DIST = os.path.join(_BASE, "frontend", "dist")
+if not os.path.isdir(_DIST):
+    _DIST = os.path.join(_BASE, "dist")
 if os.path.isdir(_DIST):
     # 首页禁止缓存：前端重新构建后，浏览器会立刻拿到新的 index.html 与新的 JS 文件名，
     # 避免用户看到旧界面（这是升级后"页面没变化"的最常见原因）。
